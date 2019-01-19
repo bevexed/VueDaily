@@ -23,7 +23,7 @@
     - 09 年诞生
     - Google
     - 使开发单页面更加方便
-    - `MVVM` 开发方式
+    - `MVVM`（数据驱动视图） 开发方式
       - 数据驱动视图，不需要操纵DOM
   - ReactJS
     - Facebook 为自己开发的 `Web` 框架
@@ -42,5 +42,113 @@
 * 手机Web网页
 * 管理系统
 
-### 
+## 语法
+
+### methods
+- 不要用剪头函数
+  - 会使 `this`  指向window
+  
+### computed
+```js
+// 访问时调用 get 方法
+// 赋值时调用 set 方法
+// ...
+computed: {
+  fullName: {
+    // getter
+    get: function () {
+      return this.firstName + ' ' + this.lastName
+    },
+    // setter
+    set: function (newValue) {
+      var names = newValue.split(' ')
+      this.firstName = names[0]
+      this.lastName = names[names.length - 1]
+    }
+  }
+}
+// ...
+```
+
+### watch
+- 只能监视一层,深度监视
+```js
+watch:{
+  c: {
+      handler: function (val, oldVal) { /* ... */ },
+      deep: true
+    },
+  // 该回调将会在侦听开始之后被立即调用
+  d: {
+    handler: function (val, oldVal) { /* ... */ },
+    immediate: true
+  }
+}
+```
+
+### 自定义指令
+> [文档](https://cn.vuejs.org/v2/guide/custom-directive.html)
+> 当不可避免的要操作 DOM 时，用自定义指令
+#### 注册
+- 全局注册
+```js
+Vue.directive('指令明',{'钩子'})
+// 每个钩子可以接受两个参数
+// el 作用该指令的 DOM 对象
+// bindling 一个对象，可以获取值等信息 例如 v-show = 'true' 
+```
+- 局部注册
+```js
+directives: {
+  focus: {
+    // 指令的定义
+    inserted: function (el) {
+      el.focus()
+    }
+  }
+}
+```
+#### 钩子
+- 每个钩子可以接受两个参数
+  - el 作用该指令的 DOM 对象
+  - bindling 一个对象，可以获取值等信息 例如 v-show = 'true' 
+
+##### bind
+- 只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置。
+  
+##### inserted
+- 被绑定元素插入父节点时调用
+- 如果需要操纵父节点，代码写在这里
+  
+##### update
+- 所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。指令的值可能发生了改变，也可能没有。但是你可以通过比较更新前后的值来忽略不必要的模板更新。
+- 获取更新之前的指令所在的 `DOM` 的内容
+  
+##### componentUpdated
+- 指令所在组件的 VNode 及其子 VNode 全部更新后调用。
+- 获取更新之后的指令所在的 `DOM` 的内容
+
+##### unbind
+- 只调用一次，指令与元素解绑时调用。
+#### 使用
+- 驼峰命名法 大写字母 => -'小写字母'
+```html
+<a v-'指令明'></a>>
+```
+
+
+
+## 浏览器同步测试工具
+### 安装
+```bash
+npm i browser-sync -D
+```
+### 配置
+```json
+{
+"scripts":{
+    "dev": "browser-sync start --server --files '*.css, *.html,*.js'"
+  }
+}
+```
 
