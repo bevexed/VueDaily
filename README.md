@@ -103,6 +103,7 @@ directives: {
   focus: {
     // 指令的定义
     inserted: function (el) {
+      // 聚焦 必须写到这里
       el.focus()
     }
   }
@@ -130,10 +131,19 @@ directives: {
 
 ##### unbind
 - 只调用一次，指令与元素解绑时调用。
+- 只有元素被移除的时候被移除
 #### 使用
 - 驼峰命名法 大写字母 => -'小写字母'
 ```html
 <a v-'指令明'></a>>
+```
+
+#### 实现原生bind
+```js
+Vue.directive('myBind',function(el,bind){
+  console.log(el, bind);
+  el.setAttribute(bind.arg,bind.value)
+})
 ```
 
 
@@ -150,5 +160,13 @@ npm i browser-sync -D
     "dev": "browser-sync start --server --files '*.css, *.html,*.js'"
   }
 }
+```
+
+
+## 准备
+### [].slice.call(lis)
+> 将伪数组转换成真数组
+```js
+
 ```
 
