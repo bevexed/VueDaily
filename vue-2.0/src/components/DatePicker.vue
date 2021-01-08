@@ -37,7 +37,9 @@
           </div>
         </div>
       </div>
-      <div class="pannel-footer"></div>
+      <div class="pannel-footer">
+        <span @click="chooseToday">今天</span>
+      </div>
     </div>
   </div>
 </template>
@@ -93,7 +95,9 @@ export default {
       this.isVisible = false;
     },
     isCurrentMonth(date) {
-      let { year, month } = getYearMonthDay(new Date());
+      let { year, month } = getYearMonthDay(
+        getDate(this.time.year, this.time.month, 1)
+      );
       let { year: y, month: m } = getYearMonthDay(date);
       return year === y && month === m;
     },
@@ -105,6 +109,10 @@ export default {
     chooseDate(date) {
       this.time = getYearMonthDay(date);
       this.$emit("input", date);
+    },
+    chooseToday() {
+      this.time = getYearMonthDay(new Date());
+      this.$emit("input", new Date());
     },
     isSelect(date) {
       let { year, month, day } = getYearMonthDay(this.value);
@@ -175,6 +183,7 @@ export default {
       display: inline-flex;
       justify-content: space-around;
       align-items: center;
+      border-bottom: 1px solid #eee;
     }
     .pannel-content {
       .cell {
@@ -201,10 +210,13 @@ export default {
           border-radius: 4px;
         }
       }
-
-      .pannel-footer {
-        height: 30px;
-      }
+    }
+    .pannel-footer {
+      height: 30px;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 }
